@@ -31,11 +31,12 @@ services:
     startCommand: gunicorn main:app -w 4 -k uvicorn.workers.UvicornWorker
 
   # 3. Frontend Static Site (React + Vite)
-  - type: static_site
+  - type: web
     name: mc-stays-frontend
+    runtime: static
     rootDir: frontend
     buildCommand: npm install && npm run build
-    publishPath: dist
+    staticPublishPath: dist
     envVars:
       - key: VITE_API_URL
         fromService:
