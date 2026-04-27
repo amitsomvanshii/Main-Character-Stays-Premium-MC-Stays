@@ -49,9 +49,9 @@ services:
         fromService:
           name: mc-stays-backend
           type: web
-          property: host
+          envVarKey: RENDER_EXTERNAL_URL
       - key: VITE_ML_URL
         fromService:
           name: mc-stays-ml
           type: web
-          property: host
+          envVarKey: RENDER_EXTERNAL_URL
