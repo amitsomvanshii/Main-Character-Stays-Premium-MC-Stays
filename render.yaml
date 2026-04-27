@@ -19,11 +19,6 @@ services:
           name: mc-stays-ml
           type: web
           property: host
-      - key: FRONTEND_URL
-        fromService:
-          name: mc-stays-frontend
-          type: static_site
-          property: url
       # Note: Add SMTP_USER, SMTP_PASS, RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET manually in Render Dashboard
 
   # 2. ML Service (Python + FastAPI)
