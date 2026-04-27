@@ -1,0 +1,54 @@
+services:
+  # 1. Backend Web Service (Node.js + Prisma)
+  - type: web
+    name: mc-stays-backend
+    env: node
+    plan: free
+    rootDir: backend
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_VERSION
+        value: 18.0.0
+      - key: DATABASE_URL
+        sync: false # IMPORTANT: You must provide a valid PostgreSQL URL (e.g., from Render DB or Supabase)
+      - key: JWT_SECRET
+        generateValue: true
+      - key: ML_SERVICE_URL
+        fromService:
+          name: mc-stays-ml
+          type: web
+          property: host
+      - key: FRONTEND_URL
+        fromService:
+          name: mc-stays-frontend
+          type: static_site
+          property: url
+      # Note: Add SMTP_USER, SMTP_PASS, RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET manually in Render Dashboard
+
+  # 2. ML Service (Python + FastAPI)
+  - type: web
+    name: mc-stays-ml
+    env: python
+    plan: free
+    rootDir: ml-service
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn main:app -w 4 -k uvicorn.workers.UvicornWorker
+
+  # 3. Frontend Static Site (React + Vite)
+  - type: static_site
+    name: mc-stays-frontend
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    publishPath: dist
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          name: mc-stays-backend
+          type: web
+          property: host
+      - key: VITE_ML_URL
+        fromService:
+          name: mc-stays-ml
+          type: web
+          property: host

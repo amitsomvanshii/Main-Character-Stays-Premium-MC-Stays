@@ -1,0 +1,248 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  STUDENT
+  OWNER
+  ADMIN
+}
+
+enum BedStatus {
+  EMPTY
+  OCCUPIED
+}
+
+enum BookingStatus {
+  ACTIVE
+  COMPLETED
+  CANCELLED
+}
+
+model User {
+  id            String    @id @default(uuid())
+  role          Role      @default(STUDENT)
+  name          String
+  email         String    @unique
+  passwordHash  String
+  phone         String?
+  verified      Boolean   @default(false)
+  otp           String?
+  otpExpiry     DateTime?
+  createdAt     DateTime  @default(now())
+  
+  pgs           Pg[]      @relation("OwnerPgs")
+  bookings      Booking[]
+  reviews       Review[]
+  payments      Payment[]
+  
+  studentConversations Conversation[] @relation("StudentConversations")
+  ownerConversations   Conversation[] @relation("OwnerConversations")
+
+  lifestyle     Json?     // { sleep: 1-5, clean: 1-5, social: 1-5, diet: 1-5, smoker: bool, music: 1-5 }
+  profileImage  String?
+
+  expensesPaid  Expense[]      @relation("ExpensePayer")
+  splits        ExpenseSplit[]
+}
+
+model Pg {
+  id              String    @id @default(uuid())
+  ownerId         String
+  name            String
+  state           String
+  city            String
+  address         String
+  rentMonthly     Float
+  facilities      Json      // e.g., ["WiFi", "AC", "Laundry"]
+  photos          String[]  @default([])
+  latitude        Float?
+  longitude       Float?
+  pgScore         Float?    @default(0.0)
+  isVerified      Boolean   @default(true)
+  fraudReason     String?
+  createdAt       DateTime  @default(now())
+
+  // ─── Owner-Provided Details ────────────────────────────────────────
+  description     String?   // Rich description of the PG / room type
+  rules           String[]  @default([]) // e.g. ["No smoking", "Visitors before 9pm only"]
+  securityDeposit Float?    // Security deposit amount (in ₹)
+  lockInDays      Int?      // Lock-in period in days
+  onboardingFee   Float?    // One-time onboarding / agreement fee
+
+  owner         User      @relation("OwnerPgs", fields: [ownerId], references: [id])
+  floors        Floor[]
+  reviews       Review[]
+  conversations Conversation[]
+}
+
+model Conversation {
+  id        String    @id @default(uuid())
+  studentId String
+  ownerId   String
+  pgId      String?   // Optional: Link to the PG being discussed
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  student   User      @relation("StudentConversations", fields: [studentId], references: [id])
+  owner     User      @relation("OwnerConversations", fields: [ownerId], references: [id])
+  pg        Pg?       @relation(fields: [pgId], references: [id])
+  messages  Message[]
+  
+  @@unique([studentId, ownerId, pgId])
+}
+
+model Message {
+  id             String   @id @default(uuid())
+  conversationId String
+  senderId       String
+  text           String?
+  attachmentUrl  String?  // For images or files
+  isRead         Boolean  @default(false)
+  createdAt      DateTime @default(now())
+
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+}
+
+model Floor {
+  id            String    @id @default(uuid())
+  pgId          String
+  floorNumber   Int
+  layoutMapUrl  String?
+
+  pg            Pg        @relation(fields: [pgId], references: [id], onDelete: Cascade)
+  beds          Bed[]
+}
+
+model Bed {
+  id               String     @id @default(uuid())
+  floorId          String
+  identifier       String     // e.g., "Bed 1", "Room 101 - A"
+  status           BedStatus  @default(EMPTY)
+  priceMultiplier  Float      @default(1.0)
+  photos           String[]
+
+  floor            Floor      @relation(fields: [floorId], references: [id], onDelete: Cascade)
+  bookings         Booking[]
+}
+
+model Booking {
+  id                  String         @id @default(uuid())
+  userId              String
+  bedId               String
+  startDate           DateTime       @default(now())
+  endDate             DateTime?
+  status              BookingStatus  @default(ACTIVE)
+  aadharNumber        String?
+  passportUrl         String?
+  occupantName        String?        // Name given at booking time (does NOT overwrite profile)
+  
+  // Phase 10 Lifecycle Fields
+  isSigned            Boolean        @default(false)
+  rentStatus          String         @default("PAID") // "PAID", "DUE", "PENDING_CONFIRMATION"
+  nextRentDate        DateTime?
+  pendingRentMonth    String?        // e.g. "May 2026"
+
+  // Digital Check-in / Registration Hub
+  profession          String?
+  permanentAddress    String?
+  checkInDate         DateTime?
+  phoneNumber         String?
+  checkInPhotoUrl     String?
+  checkInFormStatus   String         @default("PENDING") // "PENDING", "SUBMITTED"
+
+
+  user                User           @relation(fields: [userId], references: [id])
+  bed                 Bed            @relation(fields: [bedId], references: [id])
+  issues              Issue[]
+  payments            Payment[]
+}
+
+model Payment {
+  id              String   @id @default(uuid())
+  bookingId       String
+  userId          String   // The student who paid
+  amount          Float
+  currency        String   @default("INR")
+  razorpayOrderId String?
+  paymentId       String?  // Actual payment ID after completion
+  status          String   @default("PAID") // "PAID", "REFUNDED"
+  month           String   // e.g., "April 2026"
+  confirmedAt     DateTime @default(now())
+
+  booking         Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  user            User     @relation(fields: [userId], references: [id])
+}
+
+model Issue {
+  id          String   @id @default(uuid())
+  bookingId   String
+  studentId   String
+  category    String   // "Plumbing", "Electrical", "WiFi", "Other"
+  description String
+  status      String   @default("OPEN") // "OPEN", "CLOSED"
+  createdAt   DateTime @default(now())
+  
+  booking     Booking  @relation(fields: [bookingId], references: [id])
+}
+
+model Review {
+  id            String    @id @default(uuid())
+  pgId          String
+  userId        String
+  rating        Int
+  text          String?
+  createdAt     DateTime  @default(now())
+
+  pg            Pg        @relation(fields: [pgId], references: [id], onDelete: Cascade)
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+enum LeadType {
+  TOUR
+  CALLBACK
+}
+
+model Lead {
+  id          String   @id @default(uuid())
+  type        LeadType
+  name        String
+  email       String?
+  phone       String
+  state       String?
+  city        String?
+  budget      String?
+  mode        String?  // "Virtual" or "In-person" for tours
+  referral    String?
+  source      String?  // "How did you hear about us?"
+  status      String   @default("NEW") // "NEW", "CONTACTED", "REJECTED"
+  createdAt   DateTime @default(now())
+}
+
+model Expense {
+  id          String   @id @default(uuid())
+  description String
+  amount      Float
+  payerId     String
+  pgId        String
+  floorId     String
+  createdAt   DateTime @default(now())
+
+  payer       User           @relation("ExpensePayer", fields: [payerId], references: [id])
+  splits      ExpenseSplit[]
+}
+
+model ExpenseSplit {
+  id          String   @id @default(uuid())
+  expenseId   String
+  userId      String
+  amount      Float
+  status      String   @default("PENDING") // "PENDING", "SETTLED"
+
+  expense     Expense  @relation(fields: [expenseId], references: [id], onDelete: Cascade)
+  user        User     @relation(fields: [userId], references: [id])
+}

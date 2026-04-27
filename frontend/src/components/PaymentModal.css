@@ -1,0 +1,194 @@
+.payment-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(12px);
+  z-index: 4000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.payment-modal {
+  width: 100%;
+  max-width: 420px;
+  border-radius: 24px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.97);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  color: var(--text-main);
+}
+
+/* ─── Header ─── */
+.payment-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 24px 0;
+}
+
+.payment-brand { display: flex; align-items: center; gap: 14px; }
+
+.payment-logo {
+  width: 42px;
+  height: 42px;
+  background: var(--bg-dark);
+  color: white;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.payment-header h3 { margin: 0; font-size: 1.1rem; }
+.payment-header p { font-size: 0.8rem; color: var(--text-muted); margin: 0; }
+
+/* ─── Amount Banner ─── */
+.payment-amount-bar {
+  margin: 20px 24px 0;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  border-radius: 16px;
+  padding: 20px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+}
+
+.amount-label { font-size: 0.75rem; opacity: 0.7; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; }
+.amount-value { font-size: 2rem; font-weight: 800; letter-spacing: -1px; }
+
+/* ─── Steps ─── */
+.payment-step { padding: 24px; }
+.step-title { font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 16px; }
+
+/* ─── Summary rows ─── */
+.summary-card {
+  padding: 16px;
+  border-radius: 16px;
+  background: var(--surface-muted);
+  margin-bottom: 20px;
+}
+
+.payment-summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  font-size: 0.9rem;
+}
+
+.payment-summary-row span { color: var(--text-muted); }
+.payment-summary-row.total-row { 
+  margin-top: 8px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--border);
+  font-weight: 700; 
+}
+.payment-summary-row.total-row strong { color: var(--primary); font-size: 1.1rem; }
+
+/* ─── Manual Instruction ─── */
+.manual-instruction {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 14px;
+  background: rgba(79, 70, 229, 0.05);
+  border: 1px solid rgba(79, 70, 229, 0.1);
+  margin-bottom: 24px;
+}
+
+.manual-instruction p {
+  margin: 0;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--text-main);
+}
+
+/* ─── Pay Button ─── */
+.pay-btn {
+  width: 100%;
+  height: 52px;
+  font-size: 1rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border-radius: 14px;
+}
+
+.payment-notice {
+  text-align: center;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-top: 12px;
+  margin-bottom: 0;
+}
+
+/* ─── Processing ─── */
+.processing-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  gap: 16px;
+  text-align: center;
+}
+
+.processing-spinner {
+  width: 54px;
+  height: 54px;
+  border: 4px solid var(--border);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.processing-step h3 { margin: 0; font-size: 1.2rem; }
+.processing-step p { margin: 0; color: var(--text-muted); font-size: 0.85rem; }
+
+/* ─── Success ─── */
+.success-step, .error-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 220px;
+  gap: 12px;
+  text-align: center;
+  padding: 30px 24px;
+}
+
+.success-ring {
+  width: 80px; height: 80px;
+  background: #E8F5E9;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: #2E7D32;
+  animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.error-ring {
+  width: 80px; height: 80px;
+  background: #FFEBEE;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: #C62828;
+  animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes popIn {
+  from { transform: scale(0); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.success-step h3, .error-step h3 { margin: 0; font-size: 1.3rem; }
+.success-step p, .error-step p { margin: 0; color: var(--text-muted); font-size: 0.9rem; max-width: 280px; }
+.success-sub { font-size: 0.8rem !important; }

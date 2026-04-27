@@ -1,0 +1,12 @@
+/* App specific layout utilities that depend on index.css variables */
+.app-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+main {
+  flex: 1;
+  padding-top: 120px; /* Restored to a balanced padding now that click blockage is fixed */
+  padding-bottom: 250px; /* Fully clears the navbar from footer links at bottom of scroll */
+}

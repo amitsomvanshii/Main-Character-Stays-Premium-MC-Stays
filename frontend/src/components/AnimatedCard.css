@@ -1,0 +1,24 @@
+.animated-card {
+  background: white;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  position: relative;
+}
+
+.animated-card[role="button"] {
+  cursor: pointer;
+}
+
+.animated-card[role="button"]:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-md);
+  border-color: transparent;
+}
+
+.animated-card[role="button"]:active {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}

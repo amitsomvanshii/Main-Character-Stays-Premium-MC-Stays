@@ -1,0 +1,143 @@
+.signer-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(12px);
+  z-index: 3000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.signer-container {
+  width: 95%;
+  max-width: 600px;
+  padding: 50px;
+  min-height: 500px;
+  display: flex;
+  flex-direction: column;
+}
+
+.signer-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.h-icon {
+  width: 50px;
+  height: 50px;
+  color: var(--primary);
+  margin-bottom: 15px;
+}
+
+.h-icon.secure { color: #4CAF50; }
+
+.doc-preview {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  margin-bottom: 30px;
+  color: #333;
+  border: 1px solid var(--border);
+  position: relative;
+  box-shadow: inset 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.doc-preview h3 {
+  border-bottom: 2px solid var(--border);
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  font-size: 1rem;
+  letter-spacing: 1px;
+}
+
+.doc-preview p, .doc-preview li {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin-bottom: 15px;
+}
+
+.doc-stamp {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  border: 3px solid #E91E63;
+  color: #E91E63;
+  padding: 5px 15px;
+  font-weight: 800;
+  font-size: 0.8rem;
+  transform: rotate(-10deg);
+  opacity: 0.3;
+}
+
+.signature-box {
+  background: rgba(255, 255, 255, 0.5);
+  padding: 24px;
+  border-radius: 16px;
+  margin-bottom: 30px;
+  border: 1px solid white;
+}
+
+.signature-content {
+  display: flex;
+  gap: 15px;
+  align-items: flex-start;
+}
+
+.signature-content input {
+  margin-top: 4px;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.signature-content label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-main);
+  line-height: 1.4;
+  cursor: pointer;
+}
+
+.sign-btn {
+  height: 55px;
+  font-size: 1.1rem;
+}
+
+.link-btn {
+  margin-top: 15px;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  text-decoration: underline;
+  width: 100%;
+}
+
+/* Success State */
+.success-step {
+  text-align: center;
+  padding: 40px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+}
+
+.big-success-icon {
+  width: 80px;
+  height: 80px;
+  color: #4CAF50;
+  margin-bottom: 25px;
+}
+
+.confetti-sim {
+  font-size: 3rem;
+  margin-top: 20px;
+}
+
+.full-width { width: 100%; }
