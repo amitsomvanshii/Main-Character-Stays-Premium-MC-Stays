@@ -25,10 +25,6 @@ services:
         sync: false
       - key: CLOUDINARY_API_SECRET
         sync: false
-      - key: RAZORPAY_KEY_ID
-        sync: false
-      - key: RAZORPAY_KEY_SECRET
-        sync: false
       # Note: Add SMTP_USER, SMTP_PASS manually in Render Dashboard if needed for emails
 
   # 2. ML Service (Python + FastAPI)
