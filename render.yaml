@@ -6,6 +6,7 @@ services:
     plan: free
     rootDir: backend
     buildCommand: npm install && npm run build
+    preDeployCommand: npx prisma db push
     startCommand: npm start
     envVars:
       - key: NODE_VERSION
