@@ -19,7 +19,17 @@ services:
           name: mc-stays-ml
           type: web
           property: host
-      # Note: Add SMTP_USER, SMTP_PASS, RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET manually in Render Dashboard
+      - key: CLOUDINARY_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+      - key: RAZORPAY_KEY_ID
+        sync: false
+      - key: RAZORPAY_KEY_SECRET
+        sync: false
+      # Note: Add SMTP_USER, SMTP_PASS manually in Render Dashboard if needed for emails
 
   # 2. ML Service (Python + FastAPI)
   - type: web
