@@ -46,12 +46,6 @@ services:
     staticPublishPath: dist
     envVars:
       - key: VITE_API_URL
-        fromService:
-          name: mc-stays-backend
-          type: web
-          envVarKey: RENDER_EXTERNAL_URL
+        value: https://mc-stays-backend.onrender.com
       - key: VITE_ML_URL
-        fromService:
-          name: mc-stays-ml
-          type: web
-          envVarKey: RENDER_EXTERNAL_URL
+        value: https://mc-stays-ml.onrender.com
